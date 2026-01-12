@@ -60,8 +60,11 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/20;
+    @apply bg-background text-foreground antialiased selection:bg-primary/20 overflow-x-hidden;
     font-family: var(--font-body);
   }
 
@@ -69,6 +72,26 @@
     font-family: var(--font-display);
     @apply font-bold tracking-tight text-primary;
   }
+}
+
+/* Sophisticated Transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 500ms, transform 500ms;
+}
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 500ms, transform 500ms;
 }
 
 /* Custom scrollbar for gallery */

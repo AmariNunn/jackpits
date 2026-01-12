@@ -8,16 +8,26 @@ import Home from "@/pages/Home";
 import Schedule from "@/pages/Schedule";
 import Registration from "@/pages/Registration";
 import Gallery from "@/pages/Gallery";
+import Sponsorship from "@/pages/Sponsorship";
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/schedule" component={Schedule} />
-      <Route path="/registration" component={Registration} />
-      <Route path="/gallery" component={Gallery} />
-      <Route component={NotFound} />
-    </Switch>
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/schedule" component={Schedule} />
+          <Route path="/registration" component={Registration} />
+          <Route path="/gallery" component={Gallery} />
+          <Route path="/sponsorship" component={Sponsorship} />
+          <Route component={NotFound} />
+        </Switch>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
