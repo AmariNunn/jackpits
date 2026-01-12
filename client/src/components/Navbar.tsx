@@ -72,11 +72,12 @@ export function Navbar() {
                       : "text-foreground/80 hover:text-primary hover:bg-primary/5"
                   }`}
                 >
-                  {link.label}
+                  <span className="relative z-10">{link.label}</span>
                   {location === link.href && (
                     <motion.div 
                       layoutId="activeNav"
-                      className="absolute bottom-1 left-4 right-4 h-0.5 bg-primary rounded-full"
+                      className="absolute inset-0 bg-primary/5 rounded-full z-0"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
                 </motion.span>
