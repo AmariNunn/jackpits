@@ -1,21 +1,48 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Users, Heart } from "lucide-react";
+import { useRef } from "react";
+
+import img1 from "@assets/img_1679_1768237549325.jpg";
+import img2 from "@assets/img_1682_1768237549327.jpg";
 
 export default function Home() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -400]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 10]);
+  const rotate2 = useTransform(scrollYProgress, [0, 1], [0, -15]);
+
   return (
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <div ref={containerRef} className="flex flex-col w-full overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[2000ms] scale-105"
-          style={{ 
-            backgroundImage: 'url("https://images.unsplash.com/photo-1587174486073-ae5e5cff47bc?auto=format&fit=crop&q=80")',
-          }}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[#d9e3d8]">
+        {/* Floating Background Images */}
+        <motion.div 
+          style={{ y: y1, rotate: rotate1 }}
+          className="absolute top-20 left-[10%] w-64 h-80 rounded-[2rem] overflow-hidden shadow-2xl z-0 hidden lg:block"
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-background" />
-        </div>
+          <img src={img1} className="w-full h-full object-cover opacity-80" alt="Foundation Activity" />
+        </motion.div>
+        
+        <motion.div 
+          style={{ y: y2, rotate: rotate2 }}
+          className="absolute bottom-20 right-[10%] w-80 h-60 rounded-[2rem] overflow-hidden shadow-2xl z-0 hidden lg:block"
+        >
+          <img src={img2} className="w-full h-full object-cover opacity-80" alt="Golf Event" />
+        </motion.div>
+
+        <motion.div 
+          style={{ y: y3 }}
+          className="absolute top-1/4 right-[15%] w-32 h-32 bg-primary/20 rounded-full blur-3xl z-0"
+        />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
@@ -27,27 +54,25 @@ export default function Home() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-1.5 rounded-full bg-primary/10 backdrop-blur-md text-primary-foreground border border-primary/20 text-xs font-bold tracking-[0.3em] uppercase mb-8"
+              className="inline-block px-4 py-1.5 rounded-full bg-primary/10 backdrop-blur-md text-primary border border-primary/20 text-xs font-bold tracking-[0.3em] uppercase mb-8"
             >
               Est. 2010
             </motion.span>
-            <h1 className="text-5xl md:text-8xl font-bold text-white mb-8 font-display tracking-tight leading-[1.1]">
-              Championing Community <br />
-              <span className="text-primary-foreground italic font-medium">Health & Wellness</span>
+            <h1 className="text-6xl md:text-[10rem] font-bold text-primary mb-8 font-display tracking-tighter leading-[0.8] uppercase">
+              Jack Pitts
             </h1>
-            <p className="text-lg md:text-2xl text-white/80 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
-              Join us for the 2026 Jack Pitts Health Foundation Charity Golf Tournament. 
-              Together, we can make a lasting impact on our community's future.
+            <p className="text-lg md:text-2xl text-primary/80 mb-12 max-w-2xl mx-auto font-medium leading-relaxed uppercase tracking-widest">
+              Championing Community <br /> Health & Wellness
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link href="/registration">
-                <Button size="lg" className="bg-primary hover-elevate active-elevate-2 text-white px-10 h-14 rounded-full text-lg font-bold shadow-[0_20px_50px_rgba(34,197,94,0.3)] border-0">
-                  Register for Event
+                <Button size="lg" className="bg-primary hover-elevate active-elevate-2 text-white px-10 h-14 rounded-full text-lg font-bold shadow-xl border-0">
+                  Register Now
                 </Button>
               </Link>
               <Link href="/sponsorship">
-                <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-10 h-14 rounded-full text-lg font-bold backdrop-blur-md transition-all duration-500 hover:border-white">
-                  Become a Sponsor
+                <Button size="lg" variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 px-10 h-14 rounded-full text-lg font-bold transition-all duration-500 hover:border-primary">
+                  Sponsorship
                 </Button>
               </Link>
             </div>
@@ -60,11 +85,11 @@ export default function Home() {
           transition={{ delay: 1.5, duration: 1.5 }}
           className="absolute bottom-12 left-1/2 -translate-x-1/2"
         >
-          <div className="w-7 h-12 border-2 border-white/20 rounded-full flex justify-center p-2 backdrop-blur-sm">
+          <div className="w-7 h-12 border-2 border-primary/20 rounded-full flex justify-center p-2">
             <motion.div 
               animate={{ y: [0, 16, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 bg-white rounded-full"
+              className="w-1.5 h-1.5 bg-primary rounded-full"
             />
           </div>
         </motion.div>
