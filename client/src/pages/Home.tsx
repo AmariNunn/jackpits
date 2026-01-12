@@ -27,21 +27,21 @@ export default function Home() {
         {/* Floating Background Images */}
         <motion.div 
           style={{ y: y1, rotate: rotate1 }}
-          className="absolute top-20 left-[10%] w-64 h-80 rounded-[2rem] overflow-hidden shadow-2xl z-0 hidden lg:block"
+          className="absolute top-[15%] left-[5%] w-72 h-96 rounded-[2.5rem] overflow-hidden shadow-2xl z-0 hidden lg:block border-[12px] border-white"
         >
-          <img src={img1} className="w-full h-full object-cover opacity-80" alt="Foundation Activity" />
+          <img src={img1} className="w-full h-full object-cover" alt="Foundation Activity" />
         </motion.div>
         
         <motion.div 
           style={{ y: y2, rotate: rotate2 }}
-          className="absolute bottom-20 right-[10%] w-80 h-60 rounded-[2rem] overflow-hidden shadow-2xl z-0 hidden lg:block"
+          className="absolute top-[25%] right-[5%] w-80 h-[28rem] rounded-[2.5rem] overflow-hidden shadow-2xl z-0 hidden lg:block border-[12px] border-white"
         >
-          <img src={img2} className="w-full h-full object-cover opacity-80" alt="Golf Event" />
+          <img src={img2} className="w-full h-full object-cover" alt="Golf Event" />
         </motion.div>
 
         <motion.div 
           style={{ y: y3 }}
-          className="absolute top-1/4 right-[15%] w-32 h-32 bg-primary/20 rounded-full blur-3xl z-0"
+          className="absolute top-1/4 right-[25%] w-48 h-48 bg-primary/10 rounded-full blur-3xl z-0"
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
