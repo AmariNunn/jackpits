@@ -142,7 +142,7 @@ export default function Home() {
             >
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)]">
                 <img 
-                  src={img1} 
+                  src="https://lh3.googleusercontent.com/d/1edNQpYS1FWQVptB2PfV4lVVdly4oLmqi" 
                   alt="Foundation impact" 
                   className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
                 />
