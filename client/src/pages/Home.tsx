@@ -1,11 +1,40 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, Users, Heart } from "lucide-react";
-import { useRef } from "react";
+import { ArrowRight, Trophy, Award, Star } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
 
 import img1 from "@assets/img_1679_1768237549325.jpg";
 import img2 from "@assets/img_1682_1768237549327.jpg";
+import trophyRaise from "@assets/ChatGPT_Image_Mar_8,_2026,_07_29_09_PM_1773071637027.png";
+import celebration from "@assets/Golfer's_winning_moment_in_anime_style_1773071637027.png";
+
+function AnimatedCounter({ end, suffix = "", duration = 2000 }: { end: number; suffix?: string; duration?: number }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let startTime: number;
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [isInView, end, duration]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+const awards = [
+  { year: "1965", title: "State Championship MVP", desc: "Class A GIA State Championship — led Trinity High School to victory as starting quarterback and class valedictorian." },
+  { year: "1966", title: "All-Star Game MVP", desc: "GIA East-West All-Star Game MVP — showcasing elite talent on Georgia's biggest prep stage." },
+  { year: "2015", title: "Wall of Honor Inductee", desc: "Decatur Athletics Wall of Honor — honored for lifetime contributions to athletics and community." },
+  { year: "2024", title: "Hall of Fame Inductee", desc: "Georgia High School Football Hall of Fame — inducted at the College Football Hall of Fame in Atlanta." },
+];
 
 export default function Home() {
   const containerRef = useRef(null);
@@ -16,148 +45,359 @@ export default function Home() {
 
   const y1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const y2 = useTransform(scrollYProgress, [0, 1], [0, -400]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const rotate1 = useTransform(scrollYProgress, [0, 1], [0, 10]);
-  const rotate2 = useTransform(scrollYProgress, [0, 1], [0, -15]);
 
   return (
-    <div ref={containerRef} className="flex flex-col w-full overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[#d9e3d8]">
-        {/* Floating Background Images */}
-        <motion.div 
-          style={{ y: y1, rotate: rotate1 }}
-          className="absolute top-[15%] left-[5%] w-72 h-96 rounded-[2.5rem] overflow-hidden shadow-2xl z-0 hidden lg:block border-[12px] border-white"
+    <div ref={containerRef} className="flex flex-col w-full overflow-x-hidden relative">
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#0d1f0f]">
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"1\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')" }} />
+
+        <motion.div
+          style={{ y: y1 }}
+          className="absolute top-[12%] left-[3%] w-60 h-80 rounded-xl overflow-hidden shadow-2xl z-0 hidden lg:block border-4 border-white/10 rotate-[-6deg]"
         >
           <img src={img1} className="w-full h-full object-cover" alt="Foundation Activity" />
         </motion.div>
-        
-        <motion.div 
-          style={{ y: y2, rotate: rotate2 }}
-          className="absolute top-[25%] right-[5%] w-80 h-[28rem] rounded-[2.5rem] overflow-hidden shadow-2xl z-0 hidden lg:block border-[12px] border-white"
+
+        <motion.div
+          style={{ y: y2 }}
+          className="absolute bottom-[10%] left-[8%] w-48 h-64 rounded-xl overflow-hidden shadow-2xl z-0 hidden lg:block border-4 border-white/10 rotate-[4deg]"
         >
           <img src={img2} className="w-full h-full object-cover" alt="Golf Event" />
         </motion.div>
 
-        <motion.div 
-          style={{ y: y3 }}
-          className="absolute top-1/4 right-[25%] w-48 h-48 bg-primary/10 rounded-full blur-3xl z-0"
-        />
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <motion.span 
-              initial={{ opacity: 0, y: 10 }}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen py-32">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-1.5 rounded-full bg-primary/10 backdrop-blur-md text-primary border border-primary/20 text-xs font-bold tracking-[0.3em] uppercase mb-8"
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
-              Est. 2010
-            </motion.span>
-            <h1 className="text-6xl md:text-[10rem] font-bold text-primary mb-8 font-display tracking-tighter leading-[0.8] uppercase">
-              Jack Pitts
-            </h1>
-            <p className="text-lg md:text-2xl text-primary/80 mb-12 max-w-2xl mx-auto font-medium leading-relaxed uppercase tracking-widest">
-              Championing Community <br /> Health & Wellness
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/registration">
-                <Button size="lg" className="bg-primary hover-elevate active-elevate-2 text-white px-10 h-14 rounded-full text-lg font-bold shadow-xl border-0">
-                  Register Now
-                </Button>
-              </Link>
-              <Link href="/sponsorship">
-                <Button size="lg" variant="outline" className="border-primary/20 text-primary hover:bg-primary/5 px-10 h-14 rounded-full text-lg font-bold transition-all duration-500 hover:border-primary">
-                  Sponsorship
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="inline-block px-5 py-2 rounded-full bg-[#c9973a]/20 text-[#c9973a] border border-[#c9973a]/30 text-xs font-athletic tracking-[0.3em] uppercase mb-8"
+                data-testid="badge-established"
+              >
+                Est. 2010
+              </motion.span>
+              <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-display font-black text-[#f5f0e8] mb-6 leading-[0.85] uppercase tracking-tight">
+                Jack<br />Pitts
+              </h1>
+              <p className="text-lg md:text-xl text-[#f5f0e8]/70 mb-10 max-w-lg font-athletic tracking-[0.25em] uppercase">
+                Championing Community Health & Wellness
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/registration">
+                  <Button size="lg" className="bg-[#1a6b3a] hover:bg-[#1a6b3a]/90 text-white px-10 h-14 rounded-full text-lg font-bold shadow-xl border-0" data-testid="button-register-hero">
+                    Register Now
+                  </Button>
+                </Link>
+                <Link href="/sponsorship">
+                  <Button size="lg" variant="outline" className="border-[#c9973a]/40 text-[#c9973a] hover:bg-[#c9973a]/10 px-10 h-14 rounded-full text-lg font-bold transition-all duration-500" data-testid="button-sponsorship-hero">
+                    Sponsorship
+                  </Button>
+                </Link>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="mt-12 inline-flex items-center gap-3 bg-[#1a6b3a]/30 backdrop-blur-sm px-6 py-3 rounded-full border border-[#1a6b3a]/40"
+                data-testid="badge-impact"
+              >
+                <Trophy className="w-5 h-5 text-[#c9973a]" />
+                <span className="text-[#f5f0e8] font-athletic tracking-widest text-sm uppercase">15+ Years of Impact</span>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, x: 50 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="relative hidden lg:block"
+            >
+              <div className="relative">
+                <img
+                  src={trophyRaise}
+                  alt="Jack Pitts raising trophy"
+                  className="w-full max-w-lg mx-auto animate-float drop-shadow-2xl"
+                  data-testid="img-hero-trophy"
+                />
+                <div className="absolute -bottom-4 -left-4 w-full h-full bg-[#1a6b3a]/20 rounded-3xl -z-10 blur-3xl" />
+              </div>
+            </motion.div>
+          </div>
         </div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1.5 }}
           className="absolute bottom-12 left-1/2 -translate-x-1/2"
         >
-          <div className="w-7 h-12 border-2 border-primary/20 rounded-full flex justify-center p-2">
-            <motion.div 
+          <div className="w-7 h-12 border-2 border-[#f5f0e8]/20 rounded-full flex justify-center p-2">
+            <motion.div
               animate={{ y: [0, 16, 0] }}
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 bg-primary rounded-full"
+              className="w-1.5 h-1.5 bg-[#c9973a] rounded-full"
             />
           </div>
         </motion.div>
       </section>
 
-      {/* Mission Section */}
-      <section className="py-32 bg-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/2" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+      <section className="py-24 md:py-32 bg-[#f5f0e8] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.8 }}
             >
-              <h2 className="text-sm font-black tracking-[0.4em] uppercase text-primary mb-6">Our Mission</h2>
-              <h3 className="text-4xl md:text-6xl font-bold mb-10 leading-[1.2] text-foreground">
-                Empowering Lives Through <br />
-                Accessible Healthcare
-              </h3>
-              <p className="text-xl text-muted-foreground mb-12 leading-relaxed font-light">
-                The Jack Pitts Health Foundation is dedicated to improving the quality of life 
-                in our community by providing support for health education, outreach activities, 
-                and essential medical services for those in need.
+              <span className="font-athletic text-[#c9973a] tracking-[0.4em] uppercase text-sm mb-4 block">The Legend</span>
+              <blockquote className="text-2xl md:text-3xl lg:text-4xl font-display italic text-[#0d1f0f] leading-snug mb-6 border-l-4 border-[#c9973a] pl-6">
+                "The finest quarterback prospect we've ever seen on film"
+              </blockquote>
+              <p className="text-[#0d1f0f]/60 font-body text-sm uppercase tracking-widest mb-8">
+                — Duffy Daugherty, Michigan State Head Coach
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                {[
-                  { icon: Heart, title: "Compassionate Care", desc: "Supporting healthcare initiatives with heart and dedication." },
-                  { icon: Users, title: "Community Driven", desc: "Creating local programs tailored for local needs." }
-                ].map((item, i) => (
-                  <div key={i} className="flex flex-col gap-4 group">
-                    <div className="w-14 h-14 bg-primary/5 rounded-3xl flex items-center justify-center shrink-0 transition-all duration-500 group-hover:bg-primary group-hover:text-white group-hover:rotate-6">
-                      <item.icon className="w-7 h-7 text-primary transition-colors group-hover:text-white" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-lg mb-2">{item.title}</h4>
-                      <p className="text-muted-foreground leading-relaxed">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-6 text-[#0d1f0f]/80 font-body leading-relaxed text-lg">
+                <p>
+                  In 1965, Jack Pitts walked off the field in Decatur, Georgia as both the State Champion
+                  quarterback of Trinity High School AND the class valedictorian — with over 20 scholarship
+                  offers in hand.
+                </p>
+                <p>
+                  He chose Michigan State, becoming one of the first African American players from metro
+                  Atlanta to compete in the Big Ten. His recruitment wasn't just a football decision — it
+                  was a statement that echoed through the civil rights movement.
+                </p>
               </div>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 1 }}
               className="relative"
             >
-              <div className="aspect-[4/5] rounded-[2rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.2)]">
-                <img 
-                  src="https://lh3.googleusercontent.com/d/1edNQpYS1FWQVptB2PfV4lVVdly4oLmqi" 
-                  alt="Foundation impact" 
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.25)]">
+                <img
+                  src="https://lh3.googleusercontent.com/d/1edNQpYS1FWQVptB2PfV4lVVdly4oLmqi"
+                  alt="Jack Pitts with trophy"
                   className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                  data-testid="img-legend-trophy"
                 />
               </div>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 }}
-                className="absolute -bottom-12 -left-12 bg-primary p-12 rounded-[2rem] shadow-2xl hidden md:block border-[12px] border-white"
+                className="absolute -bottom-8 -left-8 bg-[#1a6b3a] p-8 md:p-10 rounded-2xl shadow-2xl hidden md:block border-8 border-[#f5f0e8]"
               >
-                <p className="text-white text-6xl font-bold mb-2 font-display">15+</p>
-                <p className="text-primary-foreground/90 font-bold tracking-widest uppercase text-xs">Years of Impact</p>
+                <p className="text-white text-5xl font-display font-bold mb-1">15+</p>
+                <p className="text-white/80 font-athletic tracking-widest uppercase text-xs">Years of Impact</p>
               </motion.div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-16 md:py-20 bg-[#1a6b3a] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"1\" fill-rule=\"evenodd\"%3E%3Cpath d=\"M0 40L40 0H20L0 20M40 40V20L20 40\"/%3E%3C/g%3E%3C/svg%3E')" }} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-4 text-center">
+            {[
+              { value: 33, suffix: "", label: "Career Touchdowns" },
+              { value: 19, suffix: "-14", label: "Championship Victory" },
+              { value: 20, suffix: "+", label: "Scholarship Offers" },
+              { value: 2, suffix: "", label: "National Titles" },
+              { value: 15, suffix: "+", label: "Years of Impact" },
+            ].map((stat, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="flex flex-col items-center"
+                data-testid={`stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                <span className="text-4xl md:text-6xl font-athletic text-white mb-2">
+                  {stat.suffix === "-14" ? (
+                    <><AnimatedCounter end={stat.value} />{stat.suffix}</>
+                  ) : (
+                    <AnimatedCounter end={stat.value} suffix={stat.suffix} />
+                  )}
+                </span>
+                <span className="text-[#f5f0e8]/60 text-xs font-athletic tracking-[0.2em] uppercase">{stat.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 md:py-32 bg-[#f5f0e8]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="font-athletic text-[#c9973a] tracking-[0.4em] uppercase text-sm mb-4 block">Honors & Recognition</span>
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-[#0d1f0f]">Awards & Milestones</h2>
+          </motion.div>
+
+          <div className="relative">
+            <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-[#c9973a]/20 -translate-y-1/2" />
+            <div className="md:hidden absolute top-0 bottom-0 left-8 w-0.5 bg-[#c9973a]/20" />
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+              {awards.map((award, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15 }}
+                  className="relative"
+                  data-testid={`award-card-${award.year}`}
+                >
+                  <div className="hidden md:flex justify-center mb-4">
+                    <div className="w-4 h-4 rounded-full bg-[#c9973a] border-4 border-[#f5f0e8] shadow-md z-10 relative" />
+                  </div>
+                  <div className="md:hidden absolute left-8 top-2 w-4 h-4 rounded-full bg-[#c9973a] border-4 border-[#f5f0e8] shadow-md z-10 -translate-x-1/2" />
+
+                  <div className="bg-white rounded-2xl p-8 shadow-lg border-t-4 border-[#c9973a] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group md:ml-0 ml-16">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Award className="w-5 h-5 text-[#c9973a]" />
+                      <span className="font-athletic text-4xl text-[#1a6b3a]">{award.year}</span>
+                    </div>
+                    <h3 className="font-display text-xl font-bold text-[#0d1f0f] mb-3">{award.title}</h3>
+                    <p className="text-[#0d1f0f]/60 font-body text-sm leading-relaxed">{award.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 md:py-32 bg-[#1a6b3a] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"100\" height=\"100\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z\" fill=\"%23ffffff\" fill-opacity=\"1\" fill-rule=\"evenodd\"/%3E%3C/svg%3E')" }} />
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="lg:col-span-5 text-center mb-8"
+            >
+              <span className="font-athletic text-[#c9973a] tracking-[0.4em] uppercase text-sm mb-6 block">A Catalyst for Change</span>
+              <blockquote className="text-3xl md:text-4xl lg:text-5xl font-display italic text-[#f5f0e8] leading-snug max-w-4xl mx-auto mb-4">
+                "If you can play, you can play. That should be how you're defined in recruiting."
+              </blockquote>
+              <p className="text-[#f5f0e8]/60 font-athletic tracking-widest uppercase text-sm">— Jack Pitts</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="lg:col-span-2"
+            >
+              <p className="text-[#f5f0e8]/80 font-body leading-relaxed text-lg">
+                Jack Pitts was part of Duffy Daugherty's legendary pipeline — recruiting Black players
+                from the segregated South to Michigan State. That program produced two national
+                championships in 1965 and 1966, forever changing the landscape of college football.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="lg:col-span-2"
+            >
+              <p className="text-[#f5f0e8]/80 font-body leading-relaxed text-lg">
+                His connection to Jimmy Raye — the first Black quarterback from the South to win a
+                major national title — whom Jack calls his hero, represents an era when athletics
+                became a powerful vehicle for social progress.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+              className="lg:col-span-1 flex justify-center"
+            >
+              <img
+                src={celebration}
+                alt="Jack Pitts celebration"
+                className="w-48 lg:w-full max-w-[200px] animate-float drop-shadow-xl"
+                data-testid="img-celebration"
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 md:py-32 bg-[#f5f0e8] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-[#1a6b3a]/5 -skew-x-12 translate-x-1/2" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="text-center mb-16">
+            <span className="font-athletic text-[#c9973a] tracking-[0.4em] uppercase text-sm mb-4 block">Our Mission</span>
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-[#0d1f0f] mb-6">
+              Empowering Lives Through<br />Accessible Healthcare
+            </h2>
+            <p className="text-xl text-[#0d1f0f]/60 max-w-3xl mx-auto font-body leading-relaxed">
+              The Jack Pitts Health Foundation is dedicated to improving the quality of life
+              in our community by providing support for health education, outreach activities,
+              and essential medical services for those in need.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { icon: "❤️", title: "Compassionate Care", desc: "Supporting healthcare initiatives with heart and dedication to those who need it most." },
+              { icon: "🤝", title: "Community Driven", desc: "Creating local programs tailored for local needs, building stronger healthier communities." },
+              { icon: "🏆", title: "Legacy of Excellence", desc: "Continuing Jack Pitts' tradition of breaking barriers and championing change." }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center group"
+              >
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3 className="font-display text-xl font-bold text-[#0d1f0f] mb-3">{item.title}</h3>
+                <p className="text-[#0d1f0f]/60 font-body leading-relaxed">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 text-center"
+          >
+            <Link href="/registration">
+              <Button size="lg" className="bg-[#1a6b3a] hover:bg-[#1a6b3a]/90 text-white px-10 h-14 rounded-full text-lg font-bold shadow-xl" data-testid="button-register-bottom">
+                Join Us This Year <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>

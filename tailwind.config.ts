@@ -83,9 +83,12 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
+        sans: ["'Lora'", "serif"],
+        serif: ["'Playfair Display'", "serif"],
         mono: ["var(--font-mono)"],
+        display: ["'Playfair Display'", "serif"],
+        athletic: ["'Bebas Neue'", "'Oswald'", "sans-serif"],
+        body: ["'Lora'", "serif"],
       },
       keyframes: {
         "accordion-down": {
